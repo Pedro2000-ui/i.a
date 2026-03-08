@@ -1,0 +1,36 @@
+Tempo total: 11.6018 segundos
+Custo total: 107
+Estados visitados: 294914
+Quantidade de movimentos: 38
+
+Estado final
+. . . . . . . . . . . . . . . .
+. # # # . . . . . . . . . . . .
+. . # . . . . . . . . . . . . .
+9 . # . . . . . . . . . . . . .
+. . . . . # # # . . . . . . . .
+. . . . . # . # . . . . . . . A
+. . . . . # . # . . . . . . . 1
+. . . . . # . # . . . . . . . .
+. . # . . . . . # # # . . . . .
+. . . . . . . . # . . . . . # .
+. . . . . . . . # . . # . . # .
+. . . . . . . . # . . # . . # .
+. . . . . . . . . . . # . . # .
+. . . . . . . . . . . # # # # .
+. . . . . . . . . . . . . . # .
+. . . . . . . . . . . . . . . .
+
+Movimentos
+D D D D B B B P B E E E C E S B D D D C P D D D D D B B D D D D D D B D S C
+
+Custo por movimento
++1 +1 +1 +1 +1 +1 +1 +1 +10 +10 +10 +10 +10 +10 +1 +1 +1 +1 +1 +1 +1 +2 +2 +2 +2 +2 +2 +2 +2 +2 +2 +2 +2 +2 +2 +2 +1 +1
+
+Legenda
+P: Pegar caixa
+S: Soltar caixa
+D: Direita
+E: Esquerda
+C: Cima
+B: Baixo

@@ -1,0 +1,28 @@
+Tempo total: 0.0008 segundos
+Custo total: 91
+Estados visitados: 48
+Quantidade de movimentos: 24
+
+Estado final
+. . . . . . . .
+1 # # . . . . .
+. . # . . . . .
+. A # . . . . .
+. 9 . . . . . .
+. . . . . . . .
+. . . . . . . .
+. . . . . . . .
+
+Movimentos
+D D D P E E E B S C D D D D P E B B B B E E S C
+
+Custo por movimento
++1 +1 +1 +1 +2 +2 +2 +2 +1 +1 +1 +1 +1 +1 +1 +10 +10 +10 +10 +10 +10 +10 +1 +1
+
+Legenda
+P: Pegar caixa
+S: Soltar caixa
+D: Direita
+E: Esquerda
+C: Cima
+B: Baixo
