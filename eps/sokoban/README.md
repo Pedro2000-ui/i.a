@@ -13,6 +13,7 @@ cd eps/sokoban
 ```
 
 3. Executar o programa
+
 O programa recebe como parâmetro um arquivo de mapa.
 ```
 python main.py maps/grid_escolhido.txt
