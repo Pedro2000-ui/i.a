@@ -3,7 +3,7 @@ flowchart TD
 
 EstadoAtual[Estado Atual]
 
-Mover[Mover para célula livre]
+Mover[Mover para célula válida]
 Pegar[Pegar caixa]
 Soltar[Soltar caixa]
 
