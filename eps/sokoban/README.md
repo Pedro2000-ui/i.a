@@ -260,13 +260,140 @@ onde:
 - $T$ é o número de ações executadas.
 - $c(a_t)$ é o custo da ```ação``` no passo $t$
 
-## Testes
-
-### Análises
-
 ## Algoritmos de Busca
+O projeto utiliza uma única função de busca baseada em fila de prioridade (```heapq```).
+A cada iteração, o estado com menor prioridade é removido da fila e expandido, gerando novos estados a partir da função ```sucessores```.
+
+Cada estado da fila contém:
+- ```prioridade```: valor usado para decidir qual estado será expandido primeiro.
+- ```state:``` configuração atual do Sokoban.
+- ```path:``` sequência de movimentos realizados e custos por movimento até aquele estado.
+- ```custo:``` custo acumulado do caminho até o estado
+
+Durante a execução, o algoritmo:
+1. Insere o estado inicial na fila de prioridade.
+
+- O algoritmo começa inserindo o estado inicial na fila com prioridade 0.
+
+    ```python
+    heapq.heappush(fila, (0, start, [], 0))
+    ```
+Onde:
+- ```0``` → prioridade inicial
+- ```start``` → estado inicial
+- ```[]``` → caminho ainda vazio
+- ```0``` → custo acumulado inicial
+
+2. Remove o estado de menor prioridade.
+
+- Em cada iteração do laço principal, o estado com menor prioridade é removido da fila.
+
+    ```python
+    prioridade, state, path, custo = heapq.heappop(fila)
+    ```
+Como a fila é uma min-heap, o estado removido sempre será aquele com menor valor de prioridade.
+
+3. Verifica se ele é um estado objetivo.
+
+- Depois de remover o estado da fila, o algoritmo verifica se ele representa uma solução do problema.
+    ```python
+    if objetivo(state, alvos):
+        return state, path, custo, visit
+    ```
+
+
+4. Caso não seja, gera seus sucessores.
+
+- Se o estado atual não for o objetivo, o algoritmo gera todos os possíveis estados seguintes.
+
+    ```python
+    for novo, mov, c in sucessores(grid, state):
+    ```
+
+5. Cada sucessor é inserido novamente na fila com uma prioridade calculada de acordo com o modo escolhido.
+
+- Primeiro o custo acumulado é atualizado:
+    ```python
+    novo_custo = custo + c
+    ```
+
+- Depois, a prioridade do estado é calculada dependendo do algoritmo escolhido.
+    ```python
+    if modo == "dijkstra":
+        prioridade = novo_custo
+
+    elif modo == "ganancioso":
+        prioridade = heuristica(novo, alvos)
+
+    else:
+        prioridade = novo_custo + heuristica(novo, alvos)
+    ```
+
+- Por fim, o novo estado é inserido novamente na fila:
+  ```python
+  heapq.heappush(
+    fila,
+    (prioridade, novo, path + [(mov, c)], novo_custo)
+    )
+  ```
+
+Isso garante que o estado será explorado futuramente, respeitando a ordem definida pela prioridade.
+
+Para evitar expandir estados repetidos, é mantido um conjunto ```visit``` contendo os estados já explorados.
+
+A principal diferença entre os algoritmos utilizados (```Dijkstra```, ```Ganancioso``` e ```A*``` ) está na forma como a prioridade de cada estado é calculada.
+
 ### Dijkstra
+Quando o algoritmo está no modo ```Dijkstra```, a prioridade de cada estado é definida apenas pelo custo acumulado do caminho:
+
+```python
+prioridade = novo_custo
+```
+Isso faz com que o algoritmo sempre expanda primeiro os estados com menor custo total desde o início.
+
+Como consequência:
+- O algoritmo garante encontrar o caminho de menor custo.
+- Porém, ele não utiliza nenhuma informação sobre a distância até o objetivo e isso faz com que muitos estados sejam explorados antes de encontrar a solução.
+
+Em grids maiores do Sokoban, esse comportamento faz com que o algoritmo expanda um número muito maior de estados, tornando a busca mais lenta.
+
+
 ### Ganancioso
+No modo ```Ganancioso```, a prioridade considera apenas a heurística:
+
+```python
+prioridade = heuristica(novo_estado)
+```
+
+A heurística estima o quão próximo o estado está do objetivo.
+
+Dessa forma, o algoritmo sempre tenta expandir primeiro os estados que parecem mais próximos da solução.
+
+Como consequência:
+- O algoritmo costuma expandir menos estados.
+- A busca tende a ser mais rápida.
+- Porém, como ele ignora o custo acumulado do caminho, pode escolher caminhos que parecem bons inicialmente, mas acabam sendo mais caros.
+
+Por isso, o método ganancioso não garante encontrar o caminho de menor custo.
+
 ### A*
+No modo ```A*```, a prioridade combina o custo do caminho já percorrido com a estimativa de distância até o objetivo:
+
+```python
+prioridade = novo_custo + heuristica(novo_estado)
+```
+
+Esse equilíbrio faz com que o algoritmo considere:
+- o custo real já percorrido.
+- uma estimativa do custo restante até o objetivo.
+
+Na prática, isso faz com que o algoritmo:
+- explore menos estados do que o ```Dijkstra```, especialmente em grids maiores.
+- mantenha a capacidade de encontrar o caminho de menor custo.
+
+Por utilizar tanto o custo acumulado quanto a heurística, o ```A*``` costuma apresentar o melhor desempenho ```geral``` entre os três métodos.
+
+## Testes
+### Análises
 
 ## Conclusão
