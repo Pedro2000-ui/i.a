@@ -24,6 +24,7 @@ Onde ```grid_escolhido.txt``` representa o mapa do Sokoban que será resolvido p
 O problema é modelado como um problema de busca em espaço de estados, no qual cada estado representa uma configuração válida do ambiente.
 
 Um estado é representado pela seguinte estrutura:
+
 $$estado = (agente, caixas, carregando)$$
 
 onde:
@@ -84,6 +85,7 @@ Soltar --> Mover
 A função sucessora recebe um estado e retorna todos os estados possíveis que podem ser alcançados através de uma única ação válida.
 
 Formalmente:
+
 $$Sucessor(estado) = {(novoEstado, movimento, custo)} $$
 
 O processo de geração de sucessores funciona da seguinte forma:
@@ -106,8 +108,7 @@ Nessa verificação:
 - ```ny``` representa a nova coluna
 - ```grid``` representa o mapa do jogo
 
-As condições verificam se a nova posição está ```fora dos limites do grid```
-Caso isso aconteça, o movimento é ignorado e o algoritmo continua avaliando outras direções.
+As condições verificam se a nova posição está ```fora dos limites do grid```. Caso isso aconteça, o movimento é ignorado e o algoritmo continua avaliando outras direções.
 
 #### Verificação de paredes
 ```python
@@ -130,6 +131,7 @@ Sejam:
 - $A$ o conjunto de posições alvo
 
 O estado é considerado objetivo quando:
+
 $$C ⊆ A$$
 
 Ou seja, todas as caixas estão localizadas em posições correspondentes aos alvos. Porém, o agente (```A```) não pode terminar o algoritmo em uma posição de alvo.
@@ -168,14 +170,18 @@ O agente (```A```) não pode estar em uma posição de alvo (```G```), após o t
 A distância Manhattan mede a distância entre dois pontos em um grid considerando apenas movimentos horizontais e verticais.
 
 Matematicamente:
-$$ d=∣x1​−x2​∣+∣y1​−y2​∣ $$
+```
+d = ∣x1​ − x2​∣ + ∣y1 ​− y2​∣
+```
 
 Exemplo:
 - caixa (```1 a 9```) em (```2,3```)
 - alvo (```G```) em (```5,7```)
   
 Distância:
-$$ |2 - 5| + |3 - 7| = 3 + 4 = 7 $$
+``` 
+|2 - 5| + |3 - 7| = 3 + 4 = 7
+```
 
 Ou seja, no mínimo 7 movimentos seriam necessários para alinhar esses pontos em um grid sem obstáculos.
 
@@ -211,7 +217,7 @@ heuristica += menor * p
 
 Sendo cada caixa ```i``` e ```pi``` o peso da caixa, a heurística total é definida como:
 
-\[h(n) = \sum_{i=1}^{k} p_i \cdot \min_{j} \left(|x_i - a_j| + |y_i - b_j|\right) \]
+$$ h(n) = \sum_{i=1}^{k} p_i \cdot \min_{j} \left(|x_i - a_j| + |y_i - b_j|\right) $$
 
 - ```k``` = número de caixas
 - (```xi,yi```) = posição da caixa ```i```
@@ -246,9 +252,9 @@ $$ c(a) = 1 $$
 
 #### Custo total de um caminho
 O custo acumulado até um estado ```n``` é:
-\[
-g(n) = \sum_{t=1}^{T} c(a_t)
-\]
+
+$$ g(n) = \sum_{t=1}^{T} c(a_t) $$
+
 
 onde:
 - $T$ é o número de ações executadas.
