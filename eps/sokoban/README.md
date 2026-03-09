@@ -395,6 +395,116 @@ Na prática, isso faz com que o algoritmo:
 Por utilizar tanto o custo acumulado quanto a heurística, o ```A*``` costuma apresentar o melhor desempenho ```geral``` entre os três métodos.
 
 ## Testes
-### Análises
+Para avaliar o comportamento dos algoritmos de busca, foram realizados testes em diferentes tamanhos de grid do Sokoban:
+- 5 × 5
+- 8 × 8
+- 16 × 16
+- 24 × 24
+- 64 × 64
+
+À medida que o tamanho do grid aumenta, o número de estados possíveis cresce rapidamente, o que impacta diretamente o desempenho dos algoritmos de busca.
+
+Os testes analisaram principalmente:
+- tempo de execução
+- quantidade de estados explorados
+- custo do caminho encontrado
+- quantidade de movimentos
+
+O objetivo dos testes foi analisar como cada algoritmo se comporta conforme o ```tamanho do espaço de estados aumenta.```
+### Resultados
+#### Busca Gananciosa
+| Grid  | Tempo (s) | Estados Visitados | Movimentos | Custo |
+| ----- | --------- | ----------------- | ---------- | ----- |
+| 5x5   | 0.0008    | 43                | 28         | 105   |
+| 8x8   | 0.0008    | 48                | 24         | 91    |
+| 16x16 | 0.0048    | 241               | 54         | 245   |
+| 24x24 | 0.0018    | 95                | 34         | 139   |
+| 64x64 | 0.0161    | 1276              | 86         | 216   |
+
+A busca ```gananciosa``` apresentou os ```menores tempos de execução``` em todos os cenários.
+
+Isso ocorre porque o algoritmo utiliza apenas a ```heurística``` para decidir qual estado expandir, priorizando sempre os estados que parecem mais próximos do objetivo.
+
+Nos testes realizados:
+- o número de estados visitados foi muito pequeno
+- o tempo de execução foi praticamente instantâneo, mesmo no grid 64×64
+
+Por outro lado, o algoritmo encontrou soluções com maior custo, como nos grids 16x16 e 64×64, onde foram acumulados custos de 245 (54 movimentos) e 216 (86 movimentos) respectivamente.
+
+Isso acontece porque o método não considera o custo acumulado do caminho, podendo escolher caminhos aparentemente bons que depois se tornam mais longos e/ou mais custosos.
+
+#### Dijkstra
+| Grid  | Tempo (s) | Estados Visitados | Movimentos | Custo |
+| ----- | --------- | ----------------- | ---------- | ----- |
+| 5x5   | 0.0779    | 7159              | 26         | 85    |
+| 8x8   | 15.002    | 83946             | 26         | 77    |
+| 16x16 | 117.9598  | 2239399           | 38         | 107   |
+| 24x24 | 399.2006  | 5354587           | 40         | 115   |
+| 64x64 | -         | -                 | -          | -     |
+
+O algoritmo Dijkstra sempre encontrou soluções com menor custo e em sua maioria com menor número de movimentos, pois expande os estados em ordem de custo acumulado.
+
+No entanto, os testes mostraram que esse algoritmo apresenta ```crescimento muito grande no número de estados explorados```.
+
+Por exemplo:
+- no grid ```5×5``` já foram visitados ```7159``` estados
+- no grid ```24×24``` foram explorados mais de ```5 milhões``` de estados
+
+Isso impacta diretamente o tempo de execução:
+- ```15 segundos``` no grid ```8×8```
+- quase ```400 segundos``` (6,6 minutos) no grid ```24×24```
+
+No grid ```64×64```, o algoritmo permaneceu executando por mais de ```6 horas``` sem encontrar solução, sendo interrompido.
+
+Esse comportamento ocorre porque o Dijkstra ```não utiliza heurística```, explorando o espaço de estados de forma ```muito mais extensa```.
+
+#### A*
+| Grid  | Tempo (s) | Estados Visitados | Movimentos | Custo |
+| ----- | --------- | ----------------- | ---------- | ----- |
+| 5x5   | 0.0726    | 5701              | 26         | 85    |
+| 8x8   | 0.1635    | 11475             | 26         | 77    |
+| 16x16 | 11.6018   | 294914            | 38         | 107   |
+| 24x24 | 8.5597    | 228289            | 40         | 115   |
+| 64x64 | 2380.313  | 10504455          | 61         | 171   |
+
+O algoritmo ```A*``` apresentou um comportamento intermediário entre os outros dois.
+
+Assim como o ```Dijkstra```, ele também encontrou soluções ótimas, com o menor custo e em sua maioria dos casos, com o menor número possível de movimentos.
+
+No entanto, por utilizar uma ```heurística combinada com o custo acumulado```, o ```A*``` consegue direcionar a busca de ```forma mais eficiente```.
+
+Comparando com Dijkstra:
+- no grid ```16×16```
+  - ```Dijkstra``` visitou ```2.239.399 estados```
+  - ```A*``` visitou ```294.914 estados```
+
+Isso representa uma redução muito significativa no espaço de busca.
+
+Mesmo assim, em grids muito grandes o custo ainda cresce bastante.
+No cenário ```64×64```, o algoritmo levou aproximadamente ```2380 segundos``` (~40 minutos) para encontrar a solução, explorando mais de ```10 milhões``` de estados.
+
+Apesar disso, foi o único algoritmo capaz de resolver esse cenário em ```tempo viável```.
+
+#### Análise Comparativa
+Os resultados mostram claramente o comportamento esperado de cada algoritmo:
+| Algoritmo  | Velocidade    | Estados explorados | Qualidade da solução |
+| ---------- | ------------- | ------------------ | -------------------- |
+| Ganancioso | Muito rápido  | Muito poucos       | Nem sempre ótima     |
+| A*         | Intermediário | Moderado           | Ótima                |
+| Dijkstra   | Muito lento   | Muito alto         | Ótima                |
+
+Principais observações:
+- ```Ganancioso``` prioriza ```velocidade```, sacrificando qualidade da solução.
+- ```Dijkstra``` garante ```solução ótima```, mas ```explora muitos estados```.
+- ```A*``` consegue ```reduzir significativamente a busca``` usando heurística.
 
 ## Conclusão
+Os experimentos demonstram claramente o impacto do uso de heurísticas em algoritmos de busca.
+
+O algoritmo ```ganancioso``` apresentou o melhor desempenho em tempo de execução, porém produziu soluções com maior número de movimentos.
+
+O ```Dijkstra```, apesar de garantir o caminho ótimo, tornou-se impraticável em grids maiores devido à grande quantidade de estados explorados.
+
+O ```A*``` apresentou o melhor equilíbrio entre desempenho e qualidade da solução, sendo capaz de resolver cenários grandes que o Dijkstra não conseguiu finalizar, mantendo ainda a capacidade de encontrar caminhos ótimos.
+
+Dessa forma, para o problema do Sokoban, o ```A*``` se mostrou o algoritmo mais adequado entre os três analisados.
