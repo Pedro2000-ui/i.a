@@ -18,3 +18,4 @@ Implementações e experimentos relacionados aos conteúdos da disciplina.
 Projetos completos desenvolvidos durante a disciplina.
 
 - [Sokoban](eps/sokoban/README.md)
+- [Companhia Aérea](eps/companhia-aerea/README.md)
