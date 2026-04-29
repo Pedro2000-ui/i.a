@@ -19,3 +19,4 @@ Projetos completos desenvolvidos durante a disciplina.
 
 - [Sokoban](eps/sokoban/README.md)
 - [Companhia Aérea](eps/companhia-aerea/README.md)
+- [Classificador de Imagens](eps/classificador/README.md)
